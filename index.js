@@ -59,7 +59,7 @@ async function generatePRDescription(commitMessages) {
         },
         {
             "role": "user",
-            "content": `Generate a well-defined description in Markdown format with at least 100 words for a pull request to Slido's Github repository with the following commit messages \`\`\`${commitsAsString}\`\`\``
+            "content": `Generate a well-defined description in Markdown format with at least 100 words for a pull request to a Github repository with the following commit messages \`\`\`${commitsAsString}\`\`\``
         }
     ];
 
