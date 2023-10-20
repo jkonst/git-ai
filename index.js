@@ -3,8 +3,13 @@
 import { execSync } from 'child_process';
 import OpenAIApi from 'openai';
 import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
 
-config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const envPath = path.join(__dirname, '.env');
+config({ path: envPath });
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
