@@ -56,6 +56,11 @@ async function generateCommitMessage(diff) {
 
 (async () => {
     const diff = getGitDiff();
+    // Check if the diff is empty
+    if (!diff.trim()) {
+        console.log("No changes detected in the repository.");
+        return;
+    }
     const commitMsg = await generateCommitMessage(diff);
     console.log(commitMsg);
 })();
