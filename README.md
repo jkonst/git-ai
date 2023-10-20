@@ -21,7 +21,7 @@
    - Using npm:
    ``` npm install -g . ```
    - Using yarn: 
-   ``` yarn global add file:. ```
+   ``` yarn global add file:$PWD ```
 
 ## Usage
 Once installed globally, you can use the git-gen command in any Git repository to generate either commit messages or PR descriptions.
