@@ -17,6 +17,8 @@ const openai = new OpenAIApi({
     key: OPENAI_API_KEY
 });
 
+const API_MODEL = 'gpt-3.5-turbo-16k';
+
 const MAX_TOKENS = 2048;
 const AVG_TOKENS_PER_LINE = 5;
 const MAX_DIFF_LINES = Math.floor(MAX_TOKENS / AVG_TOKENS_PER_LINE);
@@ -42,10 +44,35 @@ function getGitDiff() {
     }
 }
 
-async function generateCommitMessage(diff) {
-    const prompt = `You are a helpful assistant creating messages for commits in a software engineering team based on the diffs found on the specific branch. Here's the diff:\n${diff}`;
+function getCommitHistory() {
+    return execSync('git log --pretty=format:"%s"').toString().split('\n');
+}
+
+async function generatePRDescription(commitMessages) {
+    const commitsAsString = commitMessages.join('\n');
+    const messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant creating messages for pull requests in a software engineering team based on the provided commits messages."
+        },
+        {
+            "role": "user",
+            "content": `Generate a well-defined description in Markdown format with at least 100 words for a pull request to Slido's Github repository with the following commit messages \`\`\`${commitsAsString}\`\`\``
+        }
+    ];
+
     const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo-16k',
+        model: API_MODEL,
+        messages: messages
+    });
+    return response.choices[0].message.content.trim();
+}
+
+
+async function generateCommitMessage(diff) {
+    const prompt = `You are a helpful assistant creating messages for commits in a software engineering team. Based on the following diffs, provide a commit message. The first line should be a concise summary of the changes, followed by a more detailed description if necessary.\n\nDiffs:\n${diff}`;
+    const response = await openai.chat.completions.create({
+        model: API_MODEL,
         messages: [{
             role: "system",
             content: prompt
