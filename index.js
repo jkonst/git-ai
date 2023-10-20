@@ -24,7 +24,8 @@ const AVG_TOKENS_PER_LINE = 5;
 const MAX_DIFF_LINES = Math.floor(MAX_TOKENS / AVG_TOKENS_PER_LINE);
 
 const args = process.argv.slice(2);
-
+const targetBranchIndex = args.indexOf('--target-branch');
+const targetBranch = targetBranchIndex !== -1 ? args[targetBranchIndex + 1] : 'master';  // default to 'master' if not provided
 function getGitDiff() {
     try {
         let diff = execSync('git diff --function-context').toString().split('\n');
@@ -46,8 +47,8 @@ function getGitDiff() {
     }
 }
 
-function getCommitHistory(n = 10) {
-    return execSync(`git log -n ${n} --pretty=format:"%s"`).toString().split('\n');
+function getCommitHistory(targetBranch) {
+    return execSync(`git log ${targetBranch}..HEAD --pretty=format:"%s"`).toString().split('\n');
 }
 
 async function generatePRDescription(commitMessages) {
@@ -94,7 +95,7 @@ async function generateCommitMessage(diff) {
         const commitMsg = await generateCommitMessage(diff);
         console.log("Suggested Commit Message:", commitMsg);
     } else if (args.includes('--prd')) {
-        const commitMessages = getCommitHistory();
+        const commitMessages = getCommitHistory(targetBranch);
         const prDescription = await generatePRDescription(commitMessages);
         console.log("Suggested PR Description:", prDescription);
     } else {

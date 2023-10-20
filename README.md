@@ -28,12 +28,12 @@ Once installed globally, you can use the git-gen command in any Git repository t
 ### Generate a Commit Message
 ``` git-gen --cm ```
 ### Generate a PR Description
-``` git-gen --prd ```
+``` git-gen --prd --target-branch [YOUR_TARGET_BRANCH] ```
 
 ## How It Works
 - The **--cm** option fetches the **git diff** of your repository and sends it to OpenAI's API to generate a commit message. The message starts with a concise summary of the changes, followed by a more detailed description.
 
-- The **--prd** option fetches the commit history of your branch and sends it to OpenAI's API to generate a PR description in Markdown format.
+- The **--prd --target-branch [YOUR_TARGET_BRANCH]** option fetches the commit history of your branch based on the commits that are unique to the current branch since it diverged from a target branch and sends it to OpenAI's API to generate a PR description in Markdown format.
 
 ## Notes
 - Ensure you have set up the .env file with your OpenAI API key before running the script.
