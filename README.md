@@ -8,6 +8,7 @@
 1. Clone this repository
 
 ``` git clone [URL_OF_THIS_REPO] ```
+
 2. Go the repository directory
 
 ``` cd [REPO_DIRECTORY_NAME] ```
