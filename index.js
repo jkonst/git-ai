@@ -23,6 +23,8 @@ const MAX_TOKENS = 2048;
 const AVG_TOKENS_PER_LINE = 5;
 const MAX_DIFF_LINES = Math.floor(MAX_TOKENS / AVG_TOKENS_PER_LINE);
 
+const args = process.argv.slice(2);
+
 function getGitDiff() {
     try {
         let diff = execSync('git diff --function-context').toString().split('\n');
@@ -82,12 +84,21 @@ async function generateCommitMessage(diff) {
 }
 
 (async () => {
-    const diff = getGitDiff();
-    // Check if the diff is empty
-    if (!diff.trim()) {
-        console.log("No changes detected in the repository.");
-        return;
+    if (args.includes('--cm')) {
+        const diff = getGitDiff();
+        // Check if the diff is empty
+        if (!diff.trim()) {
+            console.log("No changes detected in the repository.");
+            return;
+        }
+        const commitMsg = await generateCommitMessage(diff);
+        console.log("Suggested Commit Message:", commitMsg);
+    } else if (args.includes('--prd')) {
+        const commitMessages = getCommitHistory();
+        const prDescription = await generatePRDescription(commitMessages);
+        console.log("Suggested PR Description:", prDescription);
+    } else {
+        console.log("Please specify either --cm for commit message or --prd for PR description.");
     }
-    const commitMsg = await generateCommitMessage(diff);
-    console.log(commitMsg);
+
 })();
