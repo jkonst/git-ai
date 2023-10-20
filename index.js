@@ -46,8 +46,8 @@ function getGitDiff() {
     }
 }
 
-function getCommitHistory() {
-    return execSync('git log --pretty=format:"%s"').toString().split('\n');
+function getCommitHistory(n = 10) {
+    return execSync(`git log -n ${n} --pretty=format:"%s"`).toString().split('\n');
 }
 
 async function generatePRDescription(commitMessages) {
