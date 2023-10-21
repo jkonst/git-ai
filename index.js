@@ -12,12 +12,12 @@ const envPath = path.join(__dirname, '.env');
 config({ path: envPath });
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_API_MODEL = process.env.OPENAI_MODEL;
+const OPENAI_API_TEMPERATURE = process.env.OPENAI_TEMPERATURE
 
 const openai = new OpenAIApi({
     key: OPENAI_API_KEY
 });
-
-const API_MODEL = 'gpt-3.5-turbo-16k';
 
 const MAX_TOKENS = 2048;
 const AVG_TOKENS_PER_LINE = 5;
@@ -65,7 +65,8 @@ async function generatePRDescription(commitMessages) {
     ];
 
     const response = await openai.chat.completions.create({
-        model: API_MODEL,
+        model: OPENAI_API_MODEL,
+        temperature: parseFloat(OPENAI_API_TEMPERATURE),
         messages: messages
     });
     return response.choices[0].message.content.trim();
@@ -75,7 +76,8 @@ async function generatePRDescription(commitMessages) {
 async function generateCommitMessage(diff) {
     const prompt = `You are a helpful assistant creating messages for commits in a software engineering team. Based on the following diffs, provide a commit message. The first line should be a concise summary of the changes, followed by a more detailed description if necessary.\n\nDiffs:\n${diff}`;
     const response = await openai.chat.completions.create({
-        model: API_MODEL,
+        model: OPENAI_API_MODEL,
+        temperature: parseFloat(OPENAI_API_TEMPERATURE),
         messages: [{
             role: "system",
             content: prompt
