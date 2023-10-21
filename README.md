@@ -13,7 +13,7 @@
 
 ``` cd [REPO_DIRECTORY_NAME] ```
 
-3. Create a .env file in the root of the project and add your OpenAI API key:
+3. Create a .env file in the root of the project by copying the existing .env.sample and add there your OpenAI API key:
 
 ``` OPENAI_API_KEY=your_openai_api_key ```
 
